@@ -10,5 +10,5 @@ services:
       - PYTHONUNBUFFERED=True
     ports:
       - "5003:5003"
-    volumes:
-      - ./:/root
+    #volumes:
+    # - ./:/root
