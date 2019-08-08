@@ -2,13 +2,13 @@ version: '3'
 services:
   flask:
     build: .
-    command: gunicorn -b 0.0.0.0:5003 req:app --reload
+    command: gunicorn -b 0.0.0.0:5013 req_t:app --reload
     
     environment:
-      - FLASK_APP=req.py
+      - FLASK_APP=req_t.py
       - FLASK_DEBUG=1
       - PYTHONUNBUFFERED=True
     ports:
-      - "5003:5003"
-    #volumes:
-    # - ./:/root
+      - "5013:5013"
+    volumes:
+      - ./:/root
