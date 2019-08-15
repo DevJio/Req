@@ -18,6 +18,21 @@ model = joblib.load('model2.pkl')
 count_vect = joblib.load('c_vect_main.pkl')
 class_map = {9:52, 5:48, 8:5, 7:50, 6:51, 4:53, 0:54, 3:49}
 
+with open('cl_report.txt', 'r') as file:
+    cl_report=file.read()
+
+with open('confusion_matrix.txt', 'r') as file:
+    conf_matrix =file.read()
+
+@app.route('/confusion_matrix')
+def confusion_matrix():
+        return conf_matrix
+
+@app.route('/classification_report')
+def classification_report():
+        return cl_report
+
+
 @app.route('/')
 def hello_world():
     print("go! go! go!")
