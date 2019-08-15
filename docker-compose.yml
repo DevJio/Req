@@ -12,3 +12,4 @@ services:
       - "5013:5013"
     volumes:
       - ./:/root
+    restart: always
