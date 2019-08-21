@@ -55,10 +55,11 @@ def add_message():
         data['class'] = data['class'].map(class_map)
         data['probability'] = np.around(np.max(model.predict_proba(X), axis=1), decimals=3)
         
-        response = app.response_class(response='{"id":'+str(list(data.id.values))+ ',"class":' + str(list(data['class'].values))+ \
+        response = app.response_class(response='{"id":'+data.id.to_json(orient='records')+ ',"class":' + str(list(data['class'].values))+ \
             ',"probability":'+ str(list(data['probability'].values))+'}', 
         status=200, 
         mimetype='application/json')
+        
     
     except:
         return redirect(url_for('bad_request'))
