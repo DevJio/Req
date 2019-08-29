@@ -14,14 +14,14 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-model = joblib.load('model2.pkl')
-count_vect = joblib.load('c_vect_main.pkl')
-class_map = {9:52, 5:48, 8:5, 7:50, 6:51, 4:53, 0:54, 3:49}
+model = joblib.load('modelPR_290819.pkl')
+count_vect = joblib.load('c_vect_main_PR_all.pkl')
+class_map = {0: 8, 1: 16, 2: 18, 3: 34, 4: 5, 5: 37, 6: 3}
 
-with open('cl_report.txt', 'r') as file:
+with open('cl_reportPR290819.txt', 'r') as file:
     cl_report=file.read()
 
-with open('confusion_matrix.txt', 'r') as file:
+with open('conf_matrix_consol_to_service_290819.txt', 'r') as file:
     conf_matrix =file.read()
 
 @app.route('/confusion_matrix')
