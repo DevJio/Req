@@ -10,18 +10,55 @@ import random
 import pandas as pd
 from werkzeug.utils import secure_filename
 import os
+import re
 
 app = Flask(__name__)
 CORS(app)
 
-model = joblib.load('modelPR_290819.pkl')
-count_vect = joblib.load('c_vect_main_PR_all.pkl')
-class_map = {0: 8, 1: 16, 2: 18, 3: 34, 4: 5, 5: 37, 6: 3}
+def normalize_text(text):
+        norm_text = text.lower()
+        # Replace breaks with spaces
+        norm_text = norm_text.replace('<br />', ' ')
+        # Pad punctuation with spaces on both sides
+        norm_text = norm_text.strip()
+        # try find digits and DATES (new)
+        norm_text = re.sub(r"\d\d\.\d\d\.\d\d\d\d", "ДАТА", norm_text)
 
-with open('cl_reportPR290819.txt', 'r') as file:
+        norm_text = re.sub(r"приложени[еюи]\s\d+", " ПРИЛОЖЕНИЕ", norm_text)
+
+        norm_text = re.sub(r"\s[nN№]\s?\d+", " НОМЕР", norm_text)
+        norm_text = re.sub(r"\s\d+(\s)?", " ЦИФРЫ ", norm_text)
+
+        norm_text = re.sub(r"\w\.\w\.\w+(\s)?", " ФИО ", norm_text)
+
+        # clearing start numeration
+        norm_text = re.sub(r"([\"«»])", "", norm_text)
+        norm_text = re.sub(r"(^\d+\.\d+(\.)?(\d+\.)?\s?)", "", norm_text)
+        norm_text = re.sub(r"(^\d+\)\s)", "", norm_text)
+        norm_text = re.sub(r"(^\d+\.\s+)", "", norm_text)
+        norm_text = re.sub(r"(^\w\)\s)", "", norm_text)
+        norm_text = re.sub(r"(^\-\s?)", "", norm_text)
+
+        norm_text = re.sub(r"([\.\[\]\"\,\,\%\(\)!\?;:])", "", norm_text)
+
+        norm_text = re.sub('\/\s', ' ', norm_text)  
+        norm_text = re.sub('\s№\s', ' ', norm_text)    
+        norm_text = re.sub('\s[nN]\s', ' ', norm_text)
+        norm_text = re.sub('[_]+', '', norm_text)
+
+        norm_text = re.sub('[\s+]', ' ', norm_text)
+        norm_text = norm_text.strip()
+        return norm_text
+
+
+model = joblib.load('modelPR_011019.pkl')
+count_vect = joblib.load('c_vect_CLR_PR_all.pkl')
+
+
+with open('cl_reportPR011019.txt', 'r') as file:
     cl_report=file.read()
 
-with open('conf_matrix_consol_to_service_290819.txt', 'r') as file:
+with open('conf_matrix_Model_to_service_011019.txt', 'r') as file:
     conf_matrix =file.read()
 
 @app.route('/confusion_matrix')
@@ -48,11 +85,11 @@ def add_message():
     try:
         content = request.get_json()
         data = pd.DataFrame(content)
-    
+
+        data['text'] = data['text'].apply(normalize_text)
         X = count_vect.transform(data['text'])
         
         data['class'] = model.predict(X)
-        data['class'] = data['class'].map(class_map)
         data['probability'] = np.around(np.max(model.predict_proba(X), axis=1), decimals=3)
         
         response = app.response_class(response='{"id":'+data.id.to_json(orient='records')+ ',"class":' + str(list(data['class'].values))+ \
