@@ -29,7 +29,7 @@ def normalize_text(text):
         norm_text = re.sub(r"\s[nN№]\s?\d+", " НОМЕР", norm_text)
         norm_text = re.sub(r"\s\d+(\s)?", " ЦИФРЫ ", norm_text)
 
-        norm_text = re.sub(r"\w\.\w\.\w+(\s)?", " ФИО ", norm_text)
+        norm_text = re.sub(r"\w\.\w\.(\s)?\w+(\s)?", " ФИО ", norm_text)
 
         # clearing start numeration
         norm_text = re.sub(r"([\"«»])", "", norm_text)
@@ -51,14 +51,14 @@ def normalize_text(text):
         return norm_text
 
 
-model = joblib.load('modelPR_161019.pkl')
-count_vect = joblib.load('c_vectPR_161019.pkl')
+model = joblib.load('modelPR_201019.pkl')
+count_vect = joblib.load('c_vectPR_201019.pkl')
 
 
-with open('cl_reportPR_161019.txt', 'r') as file:
+with open('cl_reportPR_201019.txt', 'r') as file:
     cl_report=file.read()
 
-with open('conf_matrix_Model_to_service_161019.txt', 'r') as file:
+with open('conf_matrix_Model_to_service_201019.txt', 'r') as file:
     conf_matrix =file.read()
 
 @app.route('/confusion_matrix')
