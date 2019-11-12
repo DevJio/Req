@@ -59,14 +59,14 @@ def normalize_text(text):
     return norm_text
 
 
-model = joblib.load('modelPR_271019.pkl')
-count_vect = joblib.load('c_vectPR_271019.pkl')
+model = joblib.load('modelPR_111119.pkl')
+count_vect = joblib.load('c_vectPR_111119.pkl')
 
 
-with open('cl_reportPR_271019.txt', 'r') as file:
+with open('cl_reportPR_111119.txt', 'r') as file:
     cl_report=file.read()
 
-with open('conf_matrix_Model_to_service_271019.txt', 'r') as file:
+with open('cconf_matrix_Model_to_service_111119.txt', 'r') as file:
     conf_matrix =file.read()
 
 @app.route('/confusion_matrix')
